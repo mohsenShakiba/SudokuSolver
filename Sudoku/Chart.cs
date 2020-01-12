@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Sudoku
 {
@@ -22,6 +23,24 @@ namespace Sudoku
             }
         }
 
+        public bool IsInputValidForSquare(Square square, Input input)
+        {
+            var rowSquares = NeighbourRowSquares(square);
+            var columnSquares = NeighbourColumnSquares(square);
+            foreach (var rowSquare in rowSquares)
+                if (!rowSquare.IsInputValidInRow(input))
+                    return false;
+            foreach (var columnSquare in columnSquares)
+                if (!columnSquare.IsInputValidInColumn(input))
+                    return false;
+            return square.IsInputValidInRow(input);
+        }
+
+        public void AddInput(Square square, Input input)
+        {
+            square.SetInput(input);
+        }
+
         private IEnumerable<Square> NeighbourRowSquares(Square square)
         {
             return Squares.Where(s => s.Row == square.Row && s != square);
@@ -35,6 +54,18 @@ namespace Sudoku
         public int Count()
         {
             return Squares.Sum(s => s.Count());
+        }
+
+        public string RepresentInString()
+        {
+            var sb = new StringBuilder();
+            foreach (var square in Squares)
+            {
+                sb.Append(square);
+                if (square.Column == 3)
+                    sb.Append("\n");
+            }
+            return sb.ToString();
         }
     }
 
@@ -84,7 +115,19 @@ namespace Sudoku
 
         public override string ToString()
         {
-            return $"Squate({Row}:{Column})";
+            return $"Square({Row}:{Column})";
+        }
+
+        public string RepresentInString()
+        {
+            var sb = new StringBuilder();
+            foreach (var input in Inputs)
+            {
+                sb.Append($" {input.Value} ");
+                if (input.Column == 3)
+                    sb.Append("\n");
+            }
+            return sb.ToString();
         }
     }
 
