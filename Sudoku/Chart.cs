@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -58,13 +58,56 @@ namespace Sudoku
 
         public string RepresentInString()
         {
-            var sb = new StringBuilder();
-            foreach (var square in Squares)
+
+            string PrintRowSeperator()
             {
-                sb.Append(square);
-                if (square.Column == 3)
-                    sb.Append("\n");
+                var sb = new StringBuilder();
+                var totalColumnsInRepresentationStr = (Size * Size) + (Size - 1) + 2;
+                
+                for (int j = 0; j < totalColumnsInRepresentationStr; j++)
+                {
+                    if (j % (Size + 1) == 0)
+                        sb.Append("   ");
+                    else
+                        sb.Append("---");
+                }
+                
+                sb.AppendLine();
+
+                return sb.ToString();
             }
+            
+            var sb = new StringBuilder();
+
+            sb.Append(PrintRowSeperator());
+            
+            for (int i = 0; i < Size * Size; i++)
+            {
+                var squareRow = (i / 3) + 1;
+                var inputRow = (i % 3) + 1;
+                var columnRange = 1..Size;
+                var squares = Squares.Where(s =>
+                    s.Row == squareRow);
+                var inputs = squares.SelectMany(i => i.Inputs).Where(i =>
+                    i.Row == inputRow &&
+                    i.Column >= columnRange.Start.Value && 
+                    i.Column <= columnRange.End.Value);
+                
+                sb.Append(" | ");
+                
+                foreach (var input in inputs)
+                {
+                    sb.Append($" {input.Value?.ToString() ?? " "} ");
+                    if (input.Column == Size)
+                        sb.Append(" | ");
+                }
+
+                sb.AppendLine();
+
+                if (inputRow == 3)
+                    sb.Append(PrintRowSeperator());
+            }
+            
             return sb.ToString();
         }
     }
