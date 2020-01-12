@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,15 +8,15 @@ namespace Sudoku
     public class Chart
     {
         public int Size { get; }
-        public HashSet<Square> Squares { get; }
+        public List<Square> Squares { get; }
         
-        public Chart(int size, int row, int column)
+        public Chart(int size)
         {
             Size = size;
-            Squares = new HashSet<Square>();
-            for (int i = 0; i < row; i++)
+            Squares = new List<Square>();
+            for (int i = 0; i < size; i++)
             {
-                for (int j = 0; j < column; j++)
+                for (int j = 0; j < size; j++)
                 {
                     Squares.Add(new Square(Size, i + 1, j + 1));
                 }
@@ -33,20 +33,15 @@ namespace Sudoku
             foreach (var columnSquare in columnSquares)
                 if (!columnSquare.IsInputValidInColumn(input))
                     return false;
-            return square.IsInputValidInRow(input);
+            return square.IsInputValidInSquare(input);
         }
 
-        public void AddInput(Square square, Input input)
-        {
-            square.SetInput(input);
-        }
-
-        private IEnumerable<Square> NeighbourRowSquares(Square square)
+        public IEnumerable<Square> NeighbourRowSquares(Square square)
         {
             return Squares.Where(s => s.Row == square.Row && s != square);
         }
         
-        private IEnumerable<Square> NeighbourColumnSquares(Square square)
+        public IEnumerable<Square> NeighbourColumnSquares(Square square)
         {
             return Squares.Where(s => s.Column == square.Column && s != square);
         }
@@ -125,20 +120,18 @@ namespace Sudoku
             Row = row;
             Column = column;
             Inputs = new HashSet<Input>();
-            for (int i = 0; i < row; i++)
+            for (int i = 0; i < size; i++)
             {
-                for (int j = 0; j < column; j++)
+                for (int j = 0; j < size; j++)
                 {
                     Inputs.Add(new Input(i + 1, j + 1));
                 }
             }
         }
 
-        public void SetInput(Input input)
+        public Input GetInput(int row, int column)
         {
-            var existingInput = Inputs.FirstOrDefault(i => i.Row == input.Row && i.Column == input.Column);
-            if (existingInput.Value != null)
-                throw new InvalidOperationException($"Cannot reset the value of {input} in {this}");
+            return Inputs.FirstOrDefault(i => i.Row == row && i.Column == column);
         }
 
         public bool IsInputValidInRow(Input input)
@@ -151,6 +144,11 @@ namespace Sudoku
             return !Inputs.Any(i => i.Column == input.Column && i.Value == input.Value);
         }
 
+        public bool IsInputValidInSquare(Input input)
+        {
+            return !Inputs.Where(i => i != input).Any(i => i.Value == input.Value);
+        }
+
         public int Count()
         {
             return Inputs.Count(i => i.Value != null);
@@ -160,18 +158,7 @@ namespace Sudoku
         {
             return $"Square({Row}:{Column})";
         }
-
-        public string RepresentInString()
-        {
-            var sb = new StringBuilder();
-            foreach (var input in Inputs)
-            {
-                sb.Append($" {input.Value} ");
-                if (input.Column == 3)
-                    sb.Append("\n");
-            }
-            return sb.ToString();
-        }
+        
     }
 
     public class Row
@@ -184,11 +171,11 @@ namespace Sudoku
         
     }
 
-    public struct Input
+    public class Input
     {
         public int Row { get; }
         public int Column { get; }
-        public int? Value { get; }
+        public int? Value { get; set; }
 
         public Input(int row, int column)
         {
