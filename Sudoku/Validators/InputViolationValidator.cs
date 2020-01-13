@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Sudoku.Models;
 
-namespace Sudoku.Permutation.Validators
+namespace Sudoku.Validators
 {
-    public class InputViolationValidator: IGenerationValidator
+    public class InputViolationValidator: IValidator
     {
-        public bool Validate(Chart chart, Box box, Input input)
+        public bool IsValid(Chart chart, Box box, Input input)
         {
             foreach (var square in chart.Boxes)
             {

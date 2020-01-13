@@ -1,4 +1,6 @@
 ﻿using System;
+using Sudoku.Models;
+using Sudoku.Presentation;
 
 namespace Sudoku
 {
@@ -8,11 +10,12 @@ namespace Sudoku
         {
             var chart = new Chart(3);
 
-            var generator = new SudokuGenerator();
+            var generator = new ChartGenerator();
             
             generator.Generate(chart, 25, 1);
 
-            Console.WriteLine(chart.RepresentInString());
+            var presentation = new StringPresentation();
+            presentation.Present(chart);
         }
     }
 }

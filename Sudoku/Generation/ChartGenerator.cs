@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Sudoku.Permutation.Validators;
+using Sudoku.Generation.Validation;
+using Sudoku.Models;
+using Sudoku.Validators;
 
 namespace Sudoku
 {
-    public class SudokuGenerator
+    public class ChartGenerator
     {
 
         private GenerationValidatorPipeline _generationValidatorPipeline;
         
-        public SudokuGenerator()
+        public ChartGenerator()
         {
             _generationValidatorPipeline = new GenerationValidatorPipeline();
             _generationValidatorPipeline.AddValidator(new BoxValidator());
@@ -40,10 +42,13 @@ namespace Sudoku
                 if (randomlySelectedInput.Value.HasValue)
                     continue;
 
+                // create a random value
                 var randomlySelectedValue = random.Next(1, (int) Math.Pow(chart.Size, 2));
                 randomlySelectedInput.Value = randomlySelectedValue;
-
-                if (!_generationValidatorPipeline.Validate(chart, randomlySelectedBox, randomlySelectedInput))
+                
+                // validate the new input
+                // if the input is invalid, remove it
+                if (!_generationValidatorPipeline.IsValid(chart, randomlySelectedBox, randomlySelectedInput))
                 {
                     randomlySelectedInput.Value = null;
                 }
@@ -51,23 +56,5 @@ namespace Sudoku
             }
         }
         
-//        public static void Permutation(Chart chart, Box box, int minCount)
-//        {
-//            while (box.Count() < minCount)
-//            {
-//                var row  = rnd.Next(1, box.Size + 1);
-//                var column  = rnd.Next(1, box.Size + 1);
-//                var input = box.GetInput(row, column);
-//                if (input.Value != null)
-//                    continue;
-//                var value  = rnd.Next(1, box.Size * box.Size);
-//                input.Value = value;
-//                if (!chart.IsInputValidForBox(box, input))
-//                {
-//                    input.Value = null;
-//                }
-//            }
-//        }
-
     }
 }
