@@ -1,37 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Sudoku
+namespace Sudoku.Permutation.Validators
 {
-    public class RandomInputGenerator
+    public class InputViolationValidator: IGenerationValidator
     {
-
-        public static void Permutation(Chart chart, Square square, int minCount)
+        public bool Validate(Chart chart, Box box, Input input)
         {
-            var rnd = new Random(1000);
-            while (square.Count() < minCount)
+            foreach (var square in chart.Boxes)
             {
-                var row  = rnd.Next(1, square.Size + 1);
-                var column  = rnd.Next(1, square.Size + 1);
-                var input = square.GetInput(row, column);
-                if (input.Value != null)
-                    continue;
-                var value  = rnd.Next(1, square.Size * square.Size);
-                input.Value = value;
-                if (!chart.IsInputValidForSquare(square, input))
-                {
-                    input.Value = null;
-                }
-            }
-        }
-
-        public static void RemoveViolatingRows(Chart chart)
-        {
-            foreach (var square in chart.Squares)
-            {
-                var neighboringRows = chart.NeighbourRowSquares(square);
-                var neighboringColumns = chart.NeighbourColumnSquares(square);
+                var neighboringRows = chart.NeighbourRowBoxes(square);
+                var neighboringColumns = chart.NeighbourColumnBoxes(square);
                 var distinctValues = new List<int>();
                 var distinctRowValues = neighboringRows.SelectMany(s => s.Inputs).Where(i => i.Value.HasValue).Select(i => i.Value.Value).Distinct();
                 var distinctColumnValues = neighboringColumns.SelectMany(s => s.Inputs).Where(i => i.Value.HasValue).Select(i => i.Value.Value).Distinct();
@@ -47,10 +26,10 @@ namespace Sudoku
                         .Where(i => !matchingRows.Contains(i.Row))
                         .Where(i => !matchingColumns.Contains(i.Column));
                     if (!results.Any(i => i.Value == null))
-                        results.First().Value = null;
+                        return false;
                 }
             }
+            return true;
         }
-        
     }
 }

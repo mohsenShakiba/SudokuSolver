@@ -8,47 +8,47 @@ namespace Sudoku
     public class Chart
     {
         public int Size { get; }
-        public List<Square> Squares { get; }
+        public List<Box> Boxes { get; }
         
         public Chart(int size)
         {
             Size = size;
-            Squares = new List<Square>();
+            Boxes = new List<Box>();
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
                 {
-                    Squares.Add(new Square(Size, i + 1, j + 1));
+                    Boxes.Add(new Box(Size, i + 1, j + 1));
                 }
             }
         }
 
-        public bool IsInputValidForSquare(Square square, Input input)
+        public bool IsInputValidForBox(Box box, Input input)
         {
-            var rowSquares = NeighbourRowSquares(square);
-            var columnSquares = NeighbourColumnSquares(square);
-            foreach (var rowSquare in rowSquares)
-                if (!rowSquare.IsInputValidInRow(input))
+            var rowBoxes = NeighbourRowBoxes(box);
+            var columnBoxes = NeighbourColumnBoxes(box);
+            foreach (var rowBox in rowBoxes)
+                if (!rowBox.IsInputValidInRow(input))
                     return false;
-            foreach (var columnSquare in columnSquares)
-                if (!columnSquare.IsInputValidInColumn(input))
+            foreach (var columnBox in columnBoxes)
+                if (!columnBox.IsInputValidInColumn(input))
                     return false;
-            return square.IsInputValidInSquare(input);
+            return box.IsInputValidInBox(input);
         }
 
-        public IEnumerable<Square> NeighbourRowSquares(Square square)
+        public IEnumerable<Box> NeighbourRowBoxes(Box box)
         {
-            return Squares.Where(s => s.Row == square.Row && s != square);
+            return Boxes.Where(s => s.Row == box.Row && s != box);
         }
         
-        public IEnumerable<Square> NeighbourColumnSquares(Square square)
+        public IEnumerable<Box> NeighbourColumnBoxes(Box box)
         {
-            return Squares.Where(s => s.Column == square.Column && s != square);
+            return Boxes.Where(s => s.Column == box.Column && s != box);
         }
 
         public int Count()
         {
-            return Squares.Sum(s => s.Count());
+            return Boxes.Sum(s => s.Count());
         }
 
         public string RepresentInString()
@@ -78,12 +78,12 @@ namespace Sudoku
             
             for (int i = 0; i < Size * Size; i++)
             {
-                var squareRow = (i / 3) + 1;
+                var boxRow = (i / 3) + 1;
                 var inputRow = (i % 3) + 1;
                 var columnRange = 1..Size;
-                var squares = Squares.Where(s =>
-                    s.Row == squareRow);
-                var inputs = squares.SelectMany(i => i.Inputs).Where(i =>
+                var boxes = Boxes.Where(s =>
+                    s.Row == boxRow);
+                var inputs = boxes.SelectMany(i => i.Inputs).Where(i =>
                     i.Row == inputRow &&
                     i.Column >= columnRange.Start.Value && 
                     i.Column <= columnRange.End.Value);
@@ -107,19 +107,19 @@ namespace Sudoku
         }
     }
 
-    public class Square
+    public class Box
     {
         public int Size { get; }
         public int Row { get; }
         public int Column { get; }
-        public HashSet<Input> Inputs { get; }
+        public List<Input> Inputs { get; }
 
-        public Square(int size, int row, int column)
+        public Box(int size, int row, int column)
         {
             Size = size;
             Row = row;
             Column = column;
-            Inputs = new HashSet<Input>();
+            Inputs = new List<Input>();
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
@@ -144,7 +144,7 @@ namespace Sudoku
             return !Inputs.Any(i => i.Column == input.Column && i.Value == input.Value);
         }
 
-        public bool IsInputValidInSquare(Input input)
+        public bool IsInputValidInBox(Input input)
         {
             return !Inputs.Where(i => i != input).Any(i => i.Value == input.Value);
         }
@@ -156,7 +156,7 @@ namespace Sudoku
 
         public override string ToString()
         {
-            return $"Square({Row}:{Column})";
+            return $"Box({Row}:{Column})";
         }
         
     }

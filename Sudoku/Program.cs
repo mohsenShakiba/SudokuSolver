@@ -8,18 +8,11 @@ namespace Sudoku
         {
             var chart = new Chart(3);
 
-            foreach (var square in chart.Squares)
-            {
-                RandomInputGenerator.Permutation(chart, square, 5);
-            }
+            var generator = new SudokuGenerator();
+            
+            generator.Generate(chart, 25, 1);
 
             Console.WriteLine(chart.RepresentInString());
-            
-            RandomInputGenerator.RemoveViolatingRows(chart);
-            
-            Console.WriteLine(chart.RepresentInString());
-
-            
         }
     }
 }
