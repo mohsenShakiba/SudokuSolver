@@ -6,8 +6,10 @@ namespace Sudoku.Models
 {
     public class Input
     {
+        public Box Box { get; }
         public int Row { get; }
         public int Column { get; }
+        
         private int? _value;
 
         public int? Value
@@ -15,16 +17,20 @@ namespace Sudoku.Models
             get => _value;
             set
             {
-                if (_value != null)
+                if (_value != null && value != null)
                     throw new InvalidOperationException($"value for {this} has already been set");
                 _value = value;
             }
         }
 
+        public bool HasValue => Value != null;
+        public int GetValue => _value ?? throw new InvalidOperationException($"{Value} is null");
+
         private readonly HashSet<int> _predictions;
 
-        public Input(int row, int column)
+        public Input(Box box, int row, int column)
         {
+            Box = box;
             Row = row;
             Column = column;
             _predictions = new HashSet<int>();

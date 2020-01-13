@@ -13,11 +13,11 @@ namespace Sudoku.Presentation
             string PrintRowSeperator()
             {
                 var sb = new StringBuilder();
-                var totalColumnsInRepresentationStr = (chart.Size * chart.Size) + (chart.Size - 1) + 2;
+                var totalColumnsInRepresentationStr = (chart.Class * chart.Class) + (chart.Class - 1) + 2;
                 
                 for (int j = 0; j < totalColumnsInRepresentationStr; j++)
                 {
-                    if (j % (chart.Size + 1) == 0)
+                    if (j % (chart.Class + 1) == 0)
                         sb.Append("   ");
                     else
                         sb.Append("---");
@@ -32,11 +32,11 @@ namespace Sudoku.Presentation
 
             sb.Append(PrintRowSeperator());
             
-            for (int i = 0; i < chart.Size * chart.Size; i++)
+            for (int i = 0; i < chart.Class * chart.Class; i++)
             {
                 var boxRow = (i / 3) + 1;
                 var inputRow = (i % 3) + 1;
-                var columnRange = 1..chart.Size;
+                var columnRange = 0..chart.Class;
                 var boxes = chart.Boxes.Where(s =>
                     s.Row == boxRow);
                 var inputs = boxes.SelectMany(i => i.Inputs).Where(i =>
@@ -49,7 +49,7 @@ namespace Sudoku.Presentation
                 foreach (var input in inputs)
                 {
                     sb.Append($" {input.Value?.ToString() ?? " "} ");
-                    if (input.Column == chart.Size)
+                    if (input.Column == chart.Class)
                         sb.Append(" | ");
                 }
 

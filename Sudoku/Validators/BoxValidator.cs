@@ -7,7 +7,7 @@ namespace Sudoku.Validators
     {
         public bool IsValid(Chart chart, Box box, Input input)
         {
-            return box.Inputs.Where(i => i != input).All(i => i.Value != input.Value);
+            return box.Inputs.Where(i => i != input && i.HasValue).All(i => i.Value != input.Value);
         }
     }
 }

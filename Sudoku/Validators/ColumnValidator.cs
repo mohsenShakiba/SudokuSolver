@@ -7,9 +7,9 @@ namespace Sudoku.Validators
     {
         public bool IsValid(Chart chart, Box box, Input input)
         {
-            var columnBoxes = chart.NeighbourColumnBoxes(box);
+            var columnBoxes = chart.NeighbourBoxesInColumn(box);
             foreach (var columnBox in columnBoxes)
-                if (columnBox.Inputs.Any(i => i.Column == input.Column && i.Value == input.Value))
+                if (columnBox.Inputs.Any(i => i.Column == input.Column && i.HasValue && i.Value == input.Value))
                     return false;
             return true;
         }
