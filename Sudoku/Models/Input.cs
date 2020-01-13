@@ -8,8 +8,19 @@ namespace Sudoku.Models
     {
         public int Row { get; }
         public int Column { get; }
-        public int? Value { get; set; }
-        
+        private int? _value;
+
+        public int? Value
+        {
+            get => _value;
+            set
+            {
+                if (_value != null)
+                    throw new InvalidOperationException($"value for {this} has already been set");
+                _value = value;
+            }
+        }
+
         private readonly HashSet<int> _predictions;
 
         public Input(int row, int column)
