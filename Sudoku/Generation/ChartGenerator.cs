@@ -19,7 +19,7 @@ namespace Sudoku
 
             selectedInput.Value = value;
             
-            if (!_validator.IsValid(chart, selectedInput.Box, selectedInput))
+            if (!_validator.IsValid(chart, selectedInput))
             {
                 selectedInput.Value = null;
                 return false;
@@ -27,18 +27,16 @@ namespace Sudoku
             return true;
         }
 
-        public void Generate(Chart chart, int minimumRequiredGeneratedNumbers, int? seedValue)
+        public void Generate(Chart chart, int? seedValue)
         {
             var random = seedValue.HasValue ? new Random(seedValue.Value) : new Random();
             
-            if (minimumRequiredGeneratedNumbers <= 0)
-                throw new InvalidOperationException($"Invalid valud for {nameof(minimumRequiredGeneratedNumbers)}");
-
-            var maxCount = 1000;
+            var maxCount = 10000;
             var currentCount = 0;
+
+            var currentNumber = 1;
             
-            
-            while (chart.Count() < minimumRequiredGeneratedNumbers)
+            while (chart.Count < (int)Math.Pow(chart.Size, 2))
             {
 
                 currentCount += 1;
@@ -48,31 +46,37 @@ namespace Sudoku
                 
                 // select a random box
                 var randomlySelectedBoxIndex = random.Next(1, chart.Size + 1);
-                var randomlySelectedBox = chart.Boxes[randomlySelectedBoxIndex - 1];
+                var randomlySelectedBox = chart.Boxes.ElementAt(randomlySelectedBoxIndex - 1);
                 
                 // randomly select an input
                 var randomlySelectedInputIndex = random.Next(1, chart.Size + 1);
-                var randomlySelectedInput = randomlySelectedBox.Inputs[randomlySelectedInputIndex - 1];
+                var randomlySelectedInput = randomlySelectedBox.Inputs.ElementAt(randomlySelectedInputIndex - 1);
                 
                 // check if input is empty
                 if (randomlySelectedInput.HasValue)
                     continue;
 
-                // create a random value
-                var randomlySelectedValue = random.Next(1, chart.Size + 1);
-                randomlySelectedInput.Value = randomlySelectedValue;
+                // set value for selected input
+                randomlySelectedInput.Value = currentNumber;
                 
                 // validate the new input
                 // if the input is invalid, remove it
-                if (!_validator.IsValid(chart, randomlySelectedBox, randomlySelectedInput))
+                if (!_validator.IsValid(chart, randomlySelectedInput))
                 {
                     randomlySelectedInput.Value = null;
                 }
                 else
                 {
-                    Console.WriteLine($"size is {chart.Count()}");
+                    Console.WriteLine($"size is {chart.Count}");
                 }
+
+                Console.WriteLine(chart.CountFor(currentNumber));
+
+                if (chart.CountFor(currentNumber) == chart.Size)
+                    currentNumber += 1;
                 
+                if (currentNumber > chart.Size)
+                    break;
             }
         }
         

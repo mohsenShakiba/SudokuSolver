@@ -4,6 +4,6 @@ namespace Sudoku.Validators
 {
     public interface IValidator
     {
-        bool IsValid(Chart chart, Box box, Input input);
+        bool IsValid(Chart chart, Input input);
     }
 }

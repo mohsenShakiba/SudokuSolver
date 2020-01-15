@@ -58,7 +58,7 @@ namespace Sudoku.Solver.Strategies
                         var input = inputsFromBoxExcludedRowsAndColumnsFromNeighbouringInputs.First();
                         input.Value = remainingValue;
                         
-                        if (!validator.IsValid(chart, input.Box, input))
+                        if (!validator.IsValid(chart, input))
                         {
                             input.Value = null;
                             continue;

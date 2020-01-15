@@ -30,7 +30,7 @@ namespace Sudoku.Solver.Strategies
 
                     remainingInput.Value = remainingValue;
 
-                    if (!validator.IsValid(chart, remainingInput.Box, remainingInput))
+                    if (!validator.IsValid(chart, remainingInput))
                     {
                         remainingInput.Value = null;
                         continue;

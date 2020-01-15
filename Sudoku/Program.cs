@@ -14,7 +14,7 @@ namespace Sudoku
 
             var generator = new ChartGenerator();
             
-            generator.Generate(chart, 40, 1);
+            generator.Generate(chart, 1);
 
             var presentation = new StringPresentation();
             presentation.Present(chart);

@@ -16,10 +16,10 @@ namespace Sudoku.Validators
             _validators.Add(new InputViolationValidator());
         }
 
-        public bool IsValid(Chart chart, Box box, Input input)
+        public bool IsValid(Chart chart, Input input)
         {
             foreach (var validator in _validators)
-                if (!validator.IsValid(chart, box, input))
+                if (!validator.IsValid(chart, input))
                     return false;
             return true;
         }

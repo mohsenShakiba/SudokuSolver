@@ -14,7 +14,7 @@ namespace Sudoku.Solver.Strategies
             var numberOfInputsSolved = 0;
             foreach (var box in chart.Boxes)
             {
-                if (box.Count() == box.Size - 1)
+                if (box.Count == box.Size - 1)
                 {
                     var allValues = new List<int>();
 
@@ -31,7 +31,7 @@ namespace Sudoku.Solver.Strategies
 
                     remainingInput.Value = remainingValue;
                     
-                    if (!validator.IsValid(chart, remainingInput.Box, remainingInput))
+                    if (!validator.IsValid(chart, remainingInput))
                     {
                         remainingInput.Value = null;
                         continue;

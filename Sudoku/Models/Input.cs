@@ -6,7 +6,6 @@ namespace Sudoku.Models
 {
     public class Input
     {
-        public Box Box { get; }
         public int Row { get; }
         public int Column { get; }
         
@@ -28,9 +27,8 @@ namespace Sudoku.Models
 
         private readonly HashSet<int> _predictions;
 
-        public Input(Box box, int row, int column)
+        public Input(int row, int column)
         {
-            Box = box;
             Row = row;
             Column = column;
             _predictions = new HashSet<int>();
@@ -57,7 +55,7 @@ namespace Sudoku.Models
         {
             return Predictions.Intersect(input.Predictions).FirstOrDefault();
         }
-
+        
     }
 
 }

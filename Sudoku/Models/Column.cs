@@ -10,31 +10,19 @@ namespace Sudoku.Models
         public int Class { get; }
         public int Index { get; }
         public int Size => (int)Math.Pow(Class, 2);
-        public Column(int rowIndex, Chart chart)
+        
+        public Column(int columnIndex, Chart chart)
         {
-            Index = rowIndex;
+            Index = columnIndex;
             Class = chart.Class;
-            var boxColumn = (rowIndex / 3) + 1;
-            var inputColumn = (rowIndex % 3) + 1;
-            var rowRange = 0..chart.Class;
-            var boxes = chart.Boxes.Where(s =>
-                s.Column == boxColumn);
-            var inputs = boxes.SelectMany(i => i.Inputs).Where(i =>
-                i.Column == inputColumn &&
-                i.Row >= rowRange.Start.Value && 
-                i.Row <= rowRange.End.Value);
-
-            Inputs = inputs;
+            Inputs = chart.Inputs.Where(i => i.Column == columnIndex);
         }
         
-        public int Count()
-        {
-            return Inputs.Count(i => i.HasValue);
-        }
+        public int Count() => Inputs.Count(i => i.HasValue);
 
-        public override string ToString()
-        {
-            return $"Row({Index})";
-        }
+        public override string ToString() => $"Row({Index})";
+        
+        public bool Contains(Input input) => Inputs.Contains(input);
+        
     }
 }

@@ -10,32 +10,23 @@ namespace Sudoku.Models
         public int Size => (int)Math.Pow(Class, 2);
         public int Row { get; }
         public int Column { get; }
-        public List<Input> Inputs { get; }
+        public IEnumerable<Input> Inputs { get; }
+        public int Count => Inputs.Count(i => i.HasValue);
 
-        public Box(int @class, int row, int column)
+        public Box(Chart chart, int row, int column)
         {
-            Class = @class;
+            Class = chart.Class;
             Row = row;
             Column = column;
-            Inputs = new List<Input>();
-            for (int i = 0; i < @class; i++)
-            {
-                for (int j = 0; j < @class; j++)
-                {
-                    Inputs.Add(new Input(this, i + 1, j + 1));
-                }
-            }
+
+            Inputs = chart.Inputs.Where(i => (i.Row / 3) + 1 == row).Where(i => (i.Column / 3) + 1 == column);
         }
 
-        public int Count()
-        {
-            return Inputs.Count(i => i.HasValue);
-        }
+        public int CountFor(int value) => Inputs.Count(i => i.HasValue && i.GetValue == value);
 
-        public override string ToString()
-        {
-            return $"Box({Row}:{Column})";
-        }
-        
+        public override string ToString() => $"Box({Row}:{Column})";
+
+        public bool Contains(Input input) => Inputs.Contains(input);
+
     }
 }

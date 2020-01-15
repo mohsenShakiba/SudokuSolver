@@ -6,12 +6,12 @@ namespace Sudoku.Validators
 {
     public class InputViolationValidator: IValidator
     {
-        public bool IsValid(Chart chart, Box box, Input input)
+        public bool IsValid(Chart chart, Input input)
         {
             foreach (var square in chart.Boxes)
             {
-                var neighboringRows = chart.NeighbourBoxesInRow(square);
-                var neighboringColumns = chart.NeighbourBoxesInColumn(square);
+                var neighboringRows = chart.NeighbourBoxesInRow(input);
+                var neighboringColumns = chart.NeighbourBoxesInColumn(input);
                 var distinctValues = new List<int>();
                 var distinctRowValues = neighboringRows.SelectMany(s => s.Inputs).Where(i => i.HasValue).Select(i => i.GetValue).Distinct();
                 var distinctColumnValues = neighboringColumns.SelectMany(s => s.Inputs).Where(i => i.HasValue).Select(i => i.GetValue).Distinct();
