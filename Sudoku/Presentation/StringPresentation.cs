@@ -12,24 +12,39 @@ namespace Sudoku.Presentation
         {
             var sb = new StringBuilder();
 
+            sb.Append(PrintSeparator(chart.Class));
+
             foreach (var input in chart.Inputs)
             {
-                if (input.Row == 1)
+                if (input.Column % chart.Class == 1)
                     sb.Append(" | ");
-                
-//                if (input.Column == 1)
-//                    sb.Append("---");
                 
                 sb.Append($" {input.Value?.ToString() ?? "0"} ");
                 
-                if (input.Row == 3)
-                    sb.AppendLine(" | ");
-                
-//                if (input.Column == 1)
-//                    sb.Append("---");
+                if (input.Column == chart.Size)
+                {
+                    sb.Append(" | ");
+                    sb.AppendLine();
+                    
+                    if (input.Row % chart.Class == 0)
+                        sb.Append(PrintSeparator(chart.Class));
+                }
+
             }
             
             Console.WriteLine(sb.ToString());
+        }
+
+        private string PrintSeparator(int @class)
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < (int) Math.Pow(@class, 2) + @class + 1; i++)
+            {
+                sb.Append("---");
+            }
+
+            sb.AppendLine();
+            return sb.ToString();
         }
     }
 }

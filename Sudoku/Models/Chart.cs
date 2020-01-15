@@ -14,7 +14,7 @@ namespace Sudoku.Models
         private readonly IList<Input> _inputs = new List<Input>();
         public IReadOnlyList<Input> Inputs => _inputs.ToImmutableList();
         
-        public int Count => _inputs.Count();
+        public int Count => _inputs.Count(i => i.HasValue);
 
         public Chart(int @class)
         {
@@ -28,7 +28,7 @@ namespace Sudoku.Models
             {
                 for (int column = 0; column < Size; column++)
                 {
-                    _inputs.Add(new Input(row, column));
+                    _inputs.Add(new Input(row + 1, column + 1));
                 }
             }
         }
@@ -70,7 +70,7 @@ namespace Sudoku.Models
             {
                 for (int row = 0; row < Class; row++)
                     for (int column = 0; column < Class; column++)
-                        yield return new Box(this, row, column);
+                        yield return new Box(this, row + 1, column + 1);
             }
         }
 
@@ -79,7 +79,7 @@ namespace Sudoku.Models
             get
             {
                 for (int i = 0; i < Size; i++)
-                    yield return new Row(i, this);
+                    yield return new Row(i + 1, this);
             }
         }
         
@@ -88,7 +88,7 @@ namespace Sudoku.Models
             get
             {
                 for (int i = 0; i < Size; i++)
-                    yield return new Column(i, this);
+                    yield return new Column(i + 1, this);
             }
         }
 
