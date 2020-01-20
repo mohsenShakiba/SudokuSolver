@@ -9,8 +9,14 @@ namespace Sudoku
     public class ChartGenerator
     {
 
-        private IValidator _validator = new SodukoValidator();
-        
+        private readonly IValidator _validator = new SodukoValidator();
+
+        private readonly Random _random;
+
+        public ChartGenerator(int? seedValue = null)
+        {
+            _random = seedValue.HasValue ? new Random(seedValue.Value) : new Random();
+        }
 
         public bool AddInputManually(Chart chart, int i, int j, int value)
         {
@@ -29,7 +35,6 @@ namespace Sudoku
 
         public void Generate(Chart chart, int? seedValue)
         {
-            var random = seedValue.HasValue ? new Random(seedValue.Value) : new Random();
             
             var maxCount = 10000;
             var currentCount = 0;
@@ -45,11 +50,11 @@ namespace Sudoku
                     return;
                 
                 // select a random box
-                var randomlySelectedBoxIndex = random.Next(1, chart.Size + 1);
+                var randomlySelectedBoxIndex = _random.Next(1, chart.Size + 1);
                 var randomlySelectedBox = chart.Boxes.ElementAt(randomlySelectedBoxIndex - 1);
                 
                 // randomly select an input
-                var randomlySelectedInputIndex = random.Next(1, chart.Size + 1);
+                var randomlySelectedInputIndex = _random.Next(1, chart.Size + 1);
                 var randomlySelectedInput = randomlySelectedBox.Inputs.ElementAt(randomlySelectedInputIndex - 1);
                 
                 // check if input is empty
