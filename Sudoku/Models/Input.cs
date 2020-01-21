@@ -23,38 +23,29 @@ namespace Sudoku.Models
         }
 
         public bool HasValue => Value != null;
-        public int GetValue => _value ?? throw new InvalidOperationException($"{Value} is null");
 
-        private readonly HashSet<int> _predictions;
-
-        public Input(int row, int column)
+        public Input(int row, int column, int? value = null)
         {
             Row = row;
             Column = column;
-            _predictions = new HashSet<int>();
+            _value = value;
         }
+
+        /// <summary>
+        /// clears the value
+        /// </summary>
+        public void Clear() => _value = null;
         
         public override string ToString()
         {
-            return $"{Row}:{Column} -> {Value} ({string.Join(',', _predictions.AsEnumerable())})";
+            return $"{Row}:{Column} -> {Value})";
         }
 
-        public void AddPrediction(int prediction)
+        public Input Clone()
         {
-            _predictions.Add(prediction);
+            return new Input(Row, Column, _value);
         }
-
-        public void RemovePrediction(int prediction)
-        {
-            _predictions.Remove(prediction);
-        }
-
-        public IEnumerable<int> Predictions => _predictions.AsEnumerable();
-
-        public int? MatchingPrediction(Input input)
-        {
-            return Predictions.Intersect(input.Predictions).FirstOrDefault();
-        }
+        
         
     }
 
