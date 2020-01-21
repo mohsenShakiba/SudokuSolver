@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization.Formatters;
+using Sudoku.Loader;
 using Sudoku.Models;
 using Sudoku.Presentation;
 using Sudoku.Solver;
@@ -8,41 +11,22 @@ namespace Sudoku
 {
     class Program
     {
+
         static void Main(string[] args)
         {
-            var chart = new Chart(3);
 
-            var generator = new ChartGenerator();
+            var loader = new FileLoader(@"..\..\..\Examples\easy_1.txt", 3);
+
+            var chart = loader.Load();
             
-            generator.Generate(chart, 1);
-
-            var presentation = new StringPresentation();
-            presentation.Present(chart);
-
-            var solver = new SudokuSolver();
-            solver.Solve(chart, null);
+            var presentation = new ConsolePresentation();
             
-            presentation.Present(chart);
-
-//            while (true)
-//            {
-//                var input = Console.ReadLine();
-//                if (string.IsNullOrEmpty(input))
-//                    continue;
-//                var values = input.Split(",").Select(s => int.Parse(s)).ToArray();
-//                if (values.Count() != 3)
-//                {
-//                    Console.WriteLine("bad input");
-//                    continue;
-//                }
-//
-//                var success = generator.AddInputManually(chart, values[0], values[1], values[2]);
-//                
-//                Console.WriteLine($"manual input was {success}");
-//
-//                presentation.Present(chart);
-//  
-//            }
+            var solver = new BackTrackSolver();
+            var solvedChart = solver.Solve(chart);
+            
+            presentation.Present(solvedChart);
+            
         }
     }
+
 }
