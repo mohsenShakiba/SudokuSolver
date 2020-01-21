@@ -61,15 +61,15 @@ namespace Sudoku.Solver
         
             // remove numbers that exist in the box
             var box = chart.BoxForInput(input);
-            numbers = numbers.Except(box.Inputs.Where(i => i.HasValue).Select(i => i.GetValue));
+            numbers = numbers.Except(box.Inputs.Where(i => i.HasValue).Select(i => i.Value ?? 0));
         
             // remove numbers that exist in the row
             var row = chart.RowForInput(input);
-            numbers = numbers.Except(row.Inputs.Where(i => i.HasValue).Select(i => i.GetValue));
+            numbers = numbers.Except(row.Inputs.Where(i => i.HasValue).Select(i => i.Value ?? 0));
         
             // remove numbers that exist in the column
             var column = chart.ColumnForInput(input);
-            numbers = numbers.Except(column.Inputs.Where(i => i.HasValue).Select(i => i.GetValue));
+            numbers = numbers.Except(column.Inputs.Where(i => i.HasValue).Select(i => i.Value ?? 0));
 
             return numbers;
         }
